@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <TextView
+        android:id="@+id/task_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="50sp"
+        android:paddingTop="15sp"
+        android:text="Title: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/task_title"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/task_title_text" />
+
+    <TextView
+        android:id="@+id/task_description_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="40sp"
+        android:paddingTop="15sp"
+        android:text="Description: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_title_text" />
+
+    <EditText
+        android:id="@+id/task_description"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/task_description_text" />
+
+    <TextView
+        android:id="@+id/task_category_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="40sp"
+        android:paddingTop="15sp"
+        android:text="Category: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_description_text" />
+
+    <EditText
+        android:id="@+id/task_category"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/task_category_text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: "
+        android:id="@+id/date_text"
+        app:layout_constraintTop_toBottomOf="@+id/task_category_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="40sp"
+        android:layout_marginStart="25sp"
+        android:paddingTop="15sp"/>
+
+    <EditText
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/date"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/date_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: "
+        android:id="@+id/time_text"
+        app:layout_constraintTop_toBottomOf="@+id/date_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="40sp"
+        android:layout_marginStart="25sp"
+        android:paddingTop="15sp"/>
+
+    <EditText
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/time_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notifications: "
+        android:id="@+id/notif_text"
+        app:layout_constraintTop_toBottomOf="@+id/time_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="40sp"
+        android:layout_marginStart="25sp"
+        android:paddingTop="15sp"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notif"
+        app:layout_constraintStart_toStartOf="@id/attachments"
+        app:layout_constraintEnd_toEndOf="@+id/attachments"
+        app:layout_constraintTop_toTopOf="@+id/notif_text"
+        app:layout_constraintBottom_toBottomOf="@+id/notif_text"
+        android:paddingTop="5sp"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attachments: "
+        android:id="@+id/attachments_text"
+        app:layout_constraintTop_toBottomOf="@+id/notif_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="40sp"
+        android:layout_marginStart="25sp"
+        android:paddingTop="15sp"/>
+
+    <EditText
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/attachments"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/attachments_text"/>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50sp"
+        android:text="Add new task"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

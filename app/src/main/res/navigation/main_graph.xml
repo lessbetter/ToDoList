@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.todolist.fragments.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.example.todolist.fragments.TaskFragment"
+        android:label="TaskFragment" >
+        <action
+            android:id="@+id/action_taskFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTaskFragment"
+        android:name="com.example.todolist.fragments.EditTaskFragment"
+        android:label="EditTaskFragment" />
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.example.todolist.fragments.AddTaskFragment"
+        android:label="AddTaskFragment" >
+        <action
+            android:id="@+id/action_addTaskFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>
