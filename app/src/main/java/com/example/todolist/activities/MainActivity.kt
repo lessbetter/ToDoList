@@ -2,6 +2,7 @@ package com.example.todolist.activities
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -10,6 +11,7 @@ import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.fragments.EditTaskFragment
 import com.example.todolist.fragments.MainFragment
 import com.example.todolist.fragments.TaskFragment
+import com.example.todolist.viewmodel.TodoViewModel
 
 class MainActivity: AppCompatActivity() {
 
@@ -21,6 +23,8 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //val viewModel: TodoViewModel by viewModels()
 
 //        val mainFragment = MainFragment()
 //        val taskFragment = TaskFragment()

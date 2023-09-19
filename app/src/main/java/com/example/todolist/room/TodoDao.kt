@@ -25,6 +25,6 @@ interface TodoDao {
     @Query ("DELETE FROM task_table")
     fun deleteAllRows()
 
-    @Query ("SELECT * FROM task_table ORDER BY finishTime ASC")
-    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>>
+//    @Query ("SELECT * FROM task_table ORDER BY finishTime ASC")
+//    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>>
 }

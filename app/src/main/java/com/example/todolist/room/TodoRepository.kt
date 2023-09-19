@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class TodoRepository(application: Application) {
 
-    private var todoDao: TodoDao
+     var todoDao: TodoDao
 
     init {
         val database:TodoDatabase? = TodoDatabase.getInstance(application.applicationContext)
@@ -44,8 +44,8 @@ class TodoRepository(application: Application) {
             todoDao.deleteAllRows()
         }
 
-    fun getAllTasksSortByAscFinishTime(): Deferred<LiveData<List<Task>>> =
-        CoroutineScope(Dispatchers.IO).async {
-            todoDao.getAllTasksSortByAscFinishTime()
-        }
+//    fun getAllTasksSortByAscFinishTime(): Deferred<LiveData<List<Task>>> =
+//        CoroutineScope(Dispatchers.IO).async {
+//            todoDao.getAllTasksSortByAscFinishTime()
+//        }
 }

@@ -10,9 +10,9 @@ import kotlinx.coroutines.runBlocking
 
 class TodoViewModel (application: Application): AndroidViewModel(application) {
 
-    private var todoRepository: TodoRepository = TodoRepository(application)
-    private var allTasks: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksAsync()
-    private var allTasksSorted: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksSortByAscFinishTime()
+    var todoRepository: TodoRepository = TodoRepository(application)
+    var allTasks: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksAsync()
+    //var allTasksSorted: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksSortByAscFinishTime()
 
     fun insertTask(task: Task){
         todoRepository.insertTask(task)
@@ -34,7 +34,7 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
         todoRepository.deleteAllRows()
     }
 
-    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>> = runBlocking {
-        allTasksSorted.await()
-    }
+//    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>> = runBlocking {
+//        allTasksSorted.await()
+//    }
 }
