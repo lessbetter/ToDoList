@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -82,22 +83,27 @@ class AddTaskFragment: Fragment() {
             val category: String = binding.taskCategory.text.toString()
             val taskDate: String = binding.date.text.toString()
             val taskTime: String = binding.time.text.toString()
-            val notifications: Boolean
-            if(binding.notif.isChecked()){
-                notifications = TRUE
-            }
-            else
-                notifications = FALSE
+            val notifications: Boolean = binding.notif.isChecked()
             val attachments: String = binding.attachments.text.toString()
 
             val formatter = DateTimeFormatter.ofPattern("HH:mm")
             val current = LocalDateTime.now().format(formatter)
-            Log.d(TAG, "my Message")
-            Log.d(TAG, title.toString())
-            //Log.d(TAG, title+description+current+taskTime+notifications+category+attachments)
+            //Log.d(TAG, notifications.toString())
+            Log.d(TAG, title+description+current+taskTime+notifications+category+attachments)
             val task = Task(title)
-            //val task = Task(title,description,current,taskTime,FALSE,notifications,category,attachments)
-            viewModel.insertTask(task)
+
+            if(title.length!=0){
+                //val task = Task(title,description,current,taskTime,FALSE,notifications,category,attachments)
+                //viewModel.insertTask(task)
+                binding.taskTitle.setText("")
+                binding.taskDescription.setText("")
+                binding.taskCategory.setText("")
+                binding.date.setText("")
+                binding.time.setText("")
+                if(binding.notif.isChecked())   binding.notif.toggle()
+                binding.attachments.setText("")
+                Toast.makeText(activity,"Task added to the list",Toast.LENGTH_SHORT).show()
+            }
         }
 
 
