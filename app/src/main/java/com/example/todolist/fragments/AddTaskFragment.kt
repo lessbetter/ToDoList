@@ -90,11 +90,11 @@ class AddTaskFragment: Fragment() {
             val current = LocalDateTime.now().format(formatter)
             //Log.d(TAG, notifications.toString())
             Log.d(TAG, title+description+current+taskTime+notifications+category+attachments)
-            val task = Task(title)
+            val task = Task(title,notifications)
 
             if(title.length!=0){
                 //val task = Task(title,description,current,taskTime,FALSE,notifications,category,attachments)
-                //viewModel.insertTask(task)
+                viewModel.insertTask(task)
                 binding.taskTitle.setText("")
                 binding.taskDescription.setText("")
                 binding.taskCategory.setText("")
