@@ -3,6 +3,7 @@ package com.example.todolist.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.todolist.room.Task
 import com.example.todolist.room.TodoRepository
 import kotlinx.coroutines.Deferred
@@ -12,6 +13,8 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     var todoRepository: TodoRepository = TodoRepository(application)
     var allTasks: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksAsync()
+    private val _curTask = MutableLiveData<Task>()
+    val curTask: LiveData<Task> get() = _curTask
     //var allTasksSorted: Deferred<LiveData<List<Task>>> = todoRepository.getAllTasksSortByAscFinishTime()
 
     fun insertTask(task: Task){
@@ -32,6 +35,10 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     fun deleteAllRows(){
         todoRepository.deleteAllRows()
+    }
+
+    fun setCurTask(task: Task){
+        _curTask.value = task
     }
 
 //    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>> = runBlocking {

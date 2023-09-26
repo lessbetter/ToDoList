@@ -22,9 +22,10 @@ class MainFragment: Fragment() {
 
     private val viewModel: TodoViewModel by activityViewModels()
     private lateinit var binding: FragmentMainBinding
-    private lateinit var todoRVAdapter: TodoRVAdapter
+    //private lateinit var todoRVAdapter: TodoRVAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var listOfTasks: LiveData<List<Task>>
+    private lateinit var adapter : TodoRVAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,16 +39,37 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val fab: FloatingActionButton = binding.fab
-        var todoAdapter : TodoRVAdapter
         listOfTasks = viewModel.getAllTasks()
-        binding.favRecyclerView.layoutManager = LinearLayoutManager(activity)
+        val fab: FloatingActionButton = binding.fab
+        adapter = TodoRVAdapter(mutableListOf(),object :TodoRVAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+//                viewModel.setCurTask(listOfTasks.value!!.elementAt(position))
+//                findNavController().navigate(R.id.action_mainFragment_to_taskFragment)
+            }
+        })
+
+
+        binding.taskRecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.taskRecyclerView.adapter = adapter
         listOfTasks.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                todoAdapter = TodoRVAdapter(it)
-                binding.favRecyclerView.adapter = todoAdapter
+                //adapter.setNewData(it)
+                adapter = TodoRVAdapter(it,object :TodoRVAdapter.onItemClickListener{
+                    override fun onItemClick(position: Int) {
+//                        viewModel.setCurTask(listOfTasks.value!!.elementAt(position))
+//                        findNavController().navigate(R.id.action_mainFragment_to_taskFragment)
+                    }
+                })
+                //binding.taskRecyclerView.adapter = adapter
+                adapter.notifyDataSetChanged()
             }
         }
+//        adapter.setOnItemClickListener(object :TodoRVAdapter.onItemClickListener{
+//            override fun onItemClick(position: Int) {
+//                viewModel.setCurTask(listOfTasks.value!!.elementAt(position))
+//                findNavController().navigate(R.id.action_mainFragment_to_taskFragment)
+//            }
+//        })
 
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_addTaskFragment)
