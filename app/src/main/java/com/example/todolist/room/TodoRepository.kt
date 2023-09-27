@@ -34,7 +34,7 @@ class TodoRepository(application: Application) {
             todoDao.delete(task)
         }
 
-    fun getAllTasksAsync(): Deferred<LiveData<List<Task>>> =
+    fun getAllTasksAsync(): Deferred<LiveData<MutableList<Task>>> =
         CoroutineScope(Dispatchers.IO).async {
             todoDao.getAllTasks()
         }

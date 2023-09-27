@@ -15,20 +15,26 @@ import com.example.todolist.fragments.MainFragment
 import com.example.todolist.room.Task
 import com.example.todolist.viewmodel.TodoViewModel
 
-class TodoRVAdapter(private val listOfTasks: List<Task>, private var mListener: onItemClickListener)
+class TodoRVAdapter(private val listOfTasks: MutableList<Task>)
     :RecyclerView.Adapter<TodoRVAdapter.ViewHolder>() {
+    private var mListener: onItemClickListener? = null
 
     interface onItemClickListener{
         fun onItemClick(position: Int)
     }
 
+    fun setNewData(list: MutableList<Task>){
+        listOfTasks.removeAll(listOfTasks)
+        listOfTasks.addAll(list)
+
+    }
     fun setOnItemClickListener(listener: onItemClickListener){
         mListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = TaskRowBinding.inflate(LayoutInflater.from(parent.context))
-        return ViewHolder(binding, mListener)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,19 +43,23 @@ class TodoRVAdapter(private val listOfTasks: List<Task>, private var mListener: 
             holder.notif.setImageResource(R.drawable.ic_notif)
         }
         else holder.notif.setImageResource(R.drawable.ic_notif_off)
-
+        holder.itemView.setOnClickListener {
+            if (mListener != null) {
+                mListener!!.onItemClick(position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
         return listOfTasks.size
     }
-    inner class ViewHolder(binding: TaskRowBinding, listener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: TaskRowBinding): RecyclerView.ViewHolder(binding.root) {
         val title = binding.taskTitle
         val notif = binding.notif
-        init {
-            binding.cardView.setOnClickListener{
-                listener.onItemClick(adapterPosition)
-            }
-        }
+//        init {
+//            binding.cardView.setOnClickListener{
+//                listener.onItemClick(adapterPosition)
+//            }
+//        }
     }
 }

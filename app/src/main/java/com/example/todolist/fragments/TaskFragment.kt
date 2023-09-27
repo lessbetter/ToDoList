@@ -35,13 +35,14 @@ class TaskFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val title: TextView = binding.taskTitle
-        val description: TextView = binding.taskDescriptionText
-        val category: TextView = binding.taskCategoryText
+        val description: TextView = binding.taskDescription
+        val category: TextView = binding.taskCategory
         val deleteBTN: Button = binding.deleteBtn
         val editBTN: Button = binding.editBtn
 
         title.text = viewModel.curTask.value!!.title
-        //description.text = viewModel.curTask.value
+        description.text = viewModel.curTask.value!!.description
+        category.text = viewModel.curTask.value!!.category
 
 
 //        val fab: FloatingActionButton = binding.fab
