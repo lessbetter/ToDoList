@@ -104,7 +104,7 @@ class EditTaskFragment: Fragment() {
             if(viewModel.curTask.value!!.title.length!=0){
 
                 viewModel.updateTask(viewModel.curTask.value!!)
-                viewModel.getAllTasks()
+                //viewModel.getAllTasks()
                 viewModel.setCurTask(viewModel.curTask.value!!)
                 Toast.makeText(activity,"Task edited successfully", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()

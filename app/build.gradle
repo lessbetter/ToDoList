@@ -41,9 +41,11 @@ android {
 dependencies {
     def room_version = "2.5.2"
     def lifecycle_version = '2.2.0'
-    def nav_version = "2.7.2"
+    def nav_version = "2.7.3"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
 
     ksp 'androidx.room:room-compiler:2.5.2'
     implementation("androidx.room:room-runtime:$room_version")

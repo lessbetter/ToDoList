@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodoDao {
@@ -24,6 +25,9 @@ interface TodoDao {
 
     @Query ("DELETE FROM task_table")
     fun deleteAllRows()
+
+    @Query ("SELECT * from task_table")
+    fun getTasksFlow(): Flow<MutableList<Task>>
 
 //    @Query ("SELECT * FROM task_table ORDER BY finishTime ASC")
 //    fun getAllTasksSortByAscFinishTime(): LiveData<List<Task>>

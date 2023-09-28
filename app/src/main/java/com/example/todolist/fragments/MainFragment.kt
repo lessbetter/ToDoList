@@ -40,7 +40,7 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listOfTasks = viewModel.getAllTasks()
+        listOfTasks = viewModel.tasksUsingFlow
 
         val fab: FloatingActionButton = binding.fab
         adapter = TodoRVAdapter(mutableListOf())
@@ -54,19 +54,35 @@ class MainFragment: Fragment() {
 
         binding.taskRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.taskRecyclerView.adapter = adapter
-        listOfTasks.observe(viewLifecycleOwner) {
+        viewModel.tasksUsingFlow.observe(viewLifecycleOwner){
             if (it.isNotEmpty()) {
                 adapter.setNewData(it)
                 //adapter = TodoRVAdapter(it)
                 //binding.taskRecyclerView.adapter = adapter
                 adapter.notifyDataSetChanged()
             }
+            else{
+                adapter.setNewData(mutableListOf())
+            }
         }
+//        listOfTasks.observe(viewLifecycleOwner) {
+//            if (it.isNotEmpty()) {
+//                adapter.setNewData(it)
+//                //adapter = TodoRVAdapter(it)
+//                //binding.taskRecyclerView.adapter = adapter
+//                adapter.notifyDataSetChanged()
+//            }
+//            else{
+//                adapter.setNewData(mutableListOf())
+//            }
+//        }
         adapter.setOnItemClickListener(object :TodoRVAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
                 //Log.d(TAG,"test")
-                viewModel.setCurTask(listOfTasks.value!!.elementAt(position))
-                findNavController().navigate(R.id.action_mainFragment_to_taskFragment)
+                if(listOfTasks.value!!.elementAt(position).user_id>=0){
+                    viewModel.setCurTask(listOfTasks.value!!.elementAt(position))
+                    findNavController().navigate(R.id.action_mainFragment_to_taskFragment)
+                }
             }
         })
 

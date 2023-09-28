@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "task_table")
-data class Task (
+class Task (
                 var title: String,
                 var description: String,
 //                var startTime: String,

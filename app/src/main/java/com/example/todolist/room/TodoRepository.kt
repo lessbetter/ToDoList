@@ -6,11 +6,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class TodoRepository(application: Application) {
 
-     var todoDao: TodoDao
+    var todoDao: TodoDao
+    val tasksFlow: Flow<MutableList<Task>> get() = todoDao.getTasksFlow()
 
     init {
         val database:TodoDatabase? = TodoDatabase.getInstance(application.applicationContext)

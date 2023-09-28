@@ -40,6 +40,7 @@ class TaskFragment: Fragment() {
         category.text = viewModel.curTask.value!!.category
         deleteBTN.setOnClickListener {
             viewModel.deleteTask(viewModel.curTask.value!!)
+            //viewModel.getAllTasks()
             findNavController().popBackStack()
         }
         editBTN.setOnClickListener {
