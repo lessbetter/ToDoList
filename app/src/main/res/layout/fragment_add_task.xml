@@ -22,16 +22,16 @@
         android:id="@+id/task_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25sp"
-        android:layout_marginTop="50sp"
-        android:paddingTop="15sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="50dp"
+        android:paddingTop="15dp"
         android:text="Title: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/task_title"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@+id/task_title_text" />
@@ -40,16 +40,16 @@
         android:id="@+id/task_description_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25sp"
-        android:layout_marginTop="40sp"
-        android:paddingTop="15sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="40dp"
+        android:paddingTop="15dp"
         android:text="Description: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_title_text" />
 
     <EditText
         android:id="@+id/task_description"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@+id/task_description_text" />
@@ -58,16 +58,16 @@
         android:id="@+id/task_category_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25sp"
-        android:layout_marginTop="40sp"
-        android:paddingTop="15sp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="40dp"
+        android:paddingTop="15dp"
         android:text="Category: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_description_text" />
 
     <EditText
         android:id="@+id/task_category"
-        android:layout_width="150sp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/task_category_text" />
@@ -79,9 +79,9 @@
         android:id="@+id/date_text"
         app:layout_constraintTop_toBottomOf="@+id/task_category_text"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40sp"
-        android:layout_marginStart="25sp"
-        android:paddingTop="15sp"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="25dp"
+        android:paddingTop="15dp"/>
 
     <EditText
         android:id="@+id/date"
@@ -152,8 +152,8 @@
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="93dp"
-        android:layout_marginBottom="50sp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
         android:text="Add new task"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -32,9 +32,8 @@ class AddTaskFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddTaskBinding.inflate(layoutInflater)
-
         return binding.root
     }
 
