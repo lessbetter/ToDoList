@@ -9,14 +9,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.R
-import com.example.todolist.adapters.TodoRVAdapter
-import com.example.todolist.databinding.FragmentMainBinding
 import com.example.todolist.databinding.FragmentTaskBinding
 import com.example.todolist.viewmodel.TodoViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.w3c.dom.Text
 
 class TaskFragment: Fragment() {
     private val viewModel: TodoViewModel by activityViewModels()
@@ -26,7 +21,7 @@ class TaskFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTaskBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -43,22 +38,12 @@ class TaskFragment: Fragment() {
         title.text = viewModel.curTask.value!!.title
         description.text = viewModel.curTask.value!!.description
         category.text = viewModel.curTask.value!!.category
-
-
-//        val fab: FloatingActionButton = binding.fab
-//        var todoAdapter : TodoRVAdapter
-//        listOfTasks = viewModel.getAllTasks()
-//        binding.favRecyclerView.layoutManager = LinearLayoutManager(activity)
-//        listOfTasks.observe(viewLifecycleOwner) {
-//            if (it.isNotEmpty()) {
-//                todoAdapter = TodoRVAdapter(it)
-//                binding.favRecyclerView.adapter = todoAdapter
-//            }
-//        }
-//
-//        fab.setOnClickListener {
-//            findNavController().navigate(R.id.action_mainFragment_to_addTaskFragment)
-//        }
-
+        deleteBTN.setOnClickListener {
+            viewModel.deleteTask(viewModel.curTask.value!!)
+            findNavController().popBackStack()
+        }
+        editBTN.setOnClickListener {
+            findNavController().navigate(R.id.action_taskFragment_to_editTaskFragment)
+        }
     }
 }
