@@ -41,6 +41,18 @@ interface TodoDao {
     @Query ("SELECT * FROM task_table WHERE category=:category AND status=0 ORDER BY dueTime ASC")
     fun getCategoryNotCompletedTasks(category: String): LiveData<MutableList<Task>>
 
+    @Query ("SELECT * FROM task_table WHERE title LIKE :title  ORDER BY dueTime ASC")
+    fun searchAll(title: String): LiveData<MutableList<Task>>
+
+    @Query ("SELECT * FROM task_table WHERE status=0 AND title LIKE :title or LOWER(title) like LOWER(:title) ORDER BY dueTime ASC")
+    fun searchUnfinished(title: String): LiveData<MutableList<Task>>
+
+    @Query ("SELECT * FROM task_table WHERE category=:category AND title LIKE :title or LOWER(title) like LOWER(:title) ORDER BY dueTime ASC")
+    fun searchAllCategorised(category: String, title: String): LiveData<MutableList<Task>>
+
+    @Query ("SELECT * FROM task_table WHERE category=:category AND status=0 AND title LIKE :title or LOWER(title) like LOWER(:title) ORDER BY dueTime ASC")
+    fun searchUnfinishedCategorised(category: String, title: String): LiveData<MutableList<Task>>
+
     @Query ("SELECT DISTINCT category FROM task_table ORDER BY category ASC")
     fun getCategories(): LiveData<MutableList<String>>
 }

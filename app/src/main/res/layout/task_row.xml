@@ -26,6 +26,17 @@
             android:text="Title" />
 
         <ImageView
+            android:id="@+id/att"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="278dp"
+            android:layout_marginEnd="82dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_attachments"
+            android:visibility="invisible"/>
+
+        <ImageView
             android:id="@+id/notif"
             android:layout_width="72dp"
             android:layout_height="wrap_content"

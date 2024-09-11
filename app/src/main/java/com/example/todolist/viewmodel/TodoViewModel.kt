@@ -27,9 +27,20 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
     val tasksUsingFlow: LiveData<MutableList<Task>> = todoRepository.tasksFlow.asLiveData()
     val allTasksSorted: Deferred<LiveData<MutableList<Task>>> = todoRepository.getAllTasksSortByAscFinishTime()
 
+    private val _testList = MutableLiveData<MutableList<Task>>()
+    val testList: LiveData<MutableList<Task>> get() = _testList
+
+
+
 
     private val _categoryList = MutableLiveData<MutableList<String>>()
     val categoryList: LiveData<MutableList<String>> get() = _categoryList
+
+    private val _filePath = MutableLiveData<String>()
+    val filePath: LiveData<String> get() = _filePath
+
+    private var _test = String()
+    val test: String get() = _test
 
 
 
@@ -62,6 +73,14 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
         _categoryList.value = categories
     }
 
+    fun setFilePath(path: String){
+        _filePath.value = path
+    }
+
+    fun setTest(path: String){
+        _test = path
+    }
+
     fun getAllTasksSortByAscFinishTime(): LiveData<MutableList<Task>> = runBlocking {
         allTasksSorted.await()
     }
@@ -80,6 +99,22 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     fun getCategoryNotFinishedTasks(category: String): LiveData<MutableList<Task>> = runBlocking {
         todoRepository.getCategoryNotCompletedTasks(category).await()
+    }
+
+    fun searchAll(title: String): LiveData<MutableList<Task>> = runBlocking {
+        todoRepository.searchAll(title).await()
+    }
+
+    fun searchUnfinished(title: String): LiveData<MutableList<Task>> = runBlocking {
+        todoRepository.searchUnfinished(title).await()
+    }
+
+    fun searchAllCategorised(category: String, title: String): LiveData<MutableList<Task>> = runBlocking {
+        todoRepository.searchAllCategorised(category,title).await()
+    }
+
+    fun searchUnfinishedCategorised(category: String, title: String): LiveData<MutableList<Task>> = runBlocking {
+        todoRepository.searchUnfinishedCategorised(category,title).await()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -1,5 +1,6 @@
 package com.example.todolist.fragments
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
@@ -7,8 +8,10 @@ import android.app.TimePickerDialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.provider.Telephony.Sms.Intents
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +19,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
@@ -31,6 +37,7 @@ import com.example.todolist.room.Task
 import com.example.todolist.viewmodel.TodoViewModel
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
@@ -40,11 +47,15 @@ import java.util.Calendar
 class AddTaskFragment: Fragment() {
     private val viewModel: TodoViewModel by activityViewModels()
     private lateinit var binding: FragmentAddTaskBinding
+    private lateinit var filePath: String
+    //private lateinit var getResult:
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         binding = FragmentAddTaskBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -54,11 +65,22 @@ class AddTaskFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val getResult = registerForActivityResult(ActivityResultContracts.GetContent()){
+            if(it?.path?.isNotEmpty() == true){
+                viewModel.setFilePath(it.path.toString())
+            }
+        }
+
+
         val dateEditText: EditText = binding.date
         val timeEditText: EditText = binding.time
         val addButton: Button = binding.addButton
         var dueTime: LocalTime? = null
         var selectedDate: String = ""
+        val attachmentsButton: Button = binding.addAttachment
+        val attachmentsText: TextView = binding.attachments
+        var filesString: String = ""
+        //val attachmentsEditText: EditText = binding.attachments
 
         dateEditText.setOnClickListener {
             val c = Calendar.getInstance()
@@ -80,6 +102,19 @@ class AddTaskFragment: Fragment() {
             datePickerDialog.show()
         }
 
+        viewModel.filePath.observe(viewLifecycleOwner){
+            if(it.isNotEmpty()){
+                if(filesString.length>2){
+                    filesString += ";"+it
+                }else{
+                    filesString += it
+                }
+
+                attachmentsText.text = filesString
+                //attachmentsEditText.setText(it)
+            }
+        }
+
         timeEditText.setOnClickListener {
             if(dueTime == null)
                 dueTime = LocalTime.now()
@@ -90,6 +125,16 @@ class AddTaskFragment: Fragment() {
             val dialog = TimePickerDialog(activity, listener, dueTime!!.hour, dueTime!!.minute, true)
 
             dialog.show()
+        }
+
+        attachmentsButton.setOnClickListener {
+            //val intent = Intent().setType("*/*")
+            getResult.launch("*/*")
+            if(viewModel.filePath.value!= null){
+                Log.d(TAG,viewModel.filePath.value.toString())
+            }
+
+
         }
 
         addButton.setOnClickListener {
@@ -113,13 +158,14 @@ class AddTaskFragment: Fragment() {
 
 
             if(title.isNotEmpty() && taskDate.isNotEmpty() && taskTime.isNotEmpty() && category.isNotEmpty() && selectedDate.isNotEmpty() && !status){
-                val task = Task(title,description,current,selectedDate,taskDue,status,notifications,category)
+                val task = Task(title,description,current,selectedDate,taskDue,status,notifications,category,filesString)
                 viewModel.insertTask(task)
                 binding.taskTitle.setText("")
                 binding.taskDescription.setText("")
                 binding.taskCategory.setText("")
                 binding.date.setText("")
                 binding.time.setText("")
+                filesString = ""
                 if(binding.notif.isChecked()) {
                     binding.notif.toggle()
                     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -173,6 +219,23 @@ class AddTaskFragment: Fragment() {
                 pendingIntent
             )
         }
+    }
+
+    fun openFile(pickerInitialURI: URI){
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply{
+            addCategory(Intent.CATEGORY_OPENABLE)
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialURI)
+        }
+
+        val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == Activity.RESULT_OK){
+                val filePath = it.data?.data?.path
+            }
+        }
+
+        //registerForActivityResult(Intent.createChooser(intent, "Select a file"),777)
+
+        //startActivity(intent)
     }
 
 }

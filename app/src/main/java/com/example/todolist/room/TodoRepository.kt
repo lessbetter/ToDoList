@@ -69,6 +69,24 @@ class TodoRepository(application: Application) {
             todoDao.getCategoryNotCompletedTasks(category)
         }
 
+    fun searchAll(title: String): Deferred<LiveData<MutableList<Task>>> =
+        CoroutineScope(Dispatchers.IO).async {
+            todoDao.searchAll(title)
+        }
+    fun searchUnfinished(title: String): Deferred<LiveData<MutableList<Task>>> =
+        CoroutineScope(Dispatchers.IO).async {
+            todoDao.searchUnfinished(title)
+        }
+
+    fun searchAllCategorised(category: String, title: String): Deferred<LiveData<MutableList<Task>>> =
+        CoroutineScope(Dispatchers.IO).async {
+            todoDao.searchAllCategorised(category,title)
+        }
+    fun searchUnfinishedCategorised(category: String, title: String): Deferred<LiveData<MutableList<Task>>> =
+        CoroutineScope(Dispatchers.IO).async {
+            todoDao.searchUnfinishedCategorised(category,title)
+        }
+
     fun getCategories(): Deferred<LiveData<MutableList<String>>> =
         CoroutineScope(Dispatchers.IO).async {
             todoDao.getCategories()

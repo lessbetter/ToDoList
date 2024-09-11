@@ -13,7 +13,7 @@ class Task (
                 var status: Boolean,            //true: completed       false: not completed yet
                 var notifications: Boolean,
                 var category: String,
-//                var attachments: String,
+                var attachments: String,
                 @PrimaryKey(autoGenerate = true) var user_id: Int = 0){
 
 

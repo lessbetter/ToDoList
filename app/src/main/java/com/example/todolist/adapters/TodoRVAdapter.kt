@@ -43,6 +43,9 @@ class TodoRVAdapter(private val listOfTasks: MutableList<Task>)
             holder.notif.setImageResource(R.drawable.ic_notif)
         }
         else holder.notif.setImageResource(R.drawable.ic_notif_off)
+        if(listOfTasks.elementAt(position).attachments.length>2){
+            holder.att.visibility = View.VISIBLE
+        }
         holder.itemView.setOnClickListener {
             if (mListener != null) {
                 mListener!!.onItemClick(position)
@@ -56,6 +59,7 @@ class TodoRVAdapter(private val listOfTasks: MutableList<Task>)
     inner class ViewHolder(binding: TaskRowBinding): RecyclerView.ViewHolder(binding.root) {
         val title = binding.taskTitle
         val notif = binding.notif
+        val att = binding.att
 
     }
 }

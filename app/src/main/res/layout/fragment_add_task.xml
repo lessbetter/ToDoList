@@ -123,8 +123,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notif"
-        app:layout_constraintStart_toStartOf="@id/attachments"
-        app:layout_constraintEnd_toEndOf="@+id/attachments"
+        app:layout_constraintStart_toStartOf="@+id/time"
+        app:layout_constraintEnd_toEndOf="@+id/time"
         app:layout_constraintTop_toTopOf="@+id/notif_text"
         app:layout_constraintBottom_toBottomOf="@+id/notif_text"
         android:paddingTop="5sp"
@@ -141,12 +141,36 @@
         android:layout_marginStart="25sp"
         android:paddingTop="15sp"/>
 
-    <EditText
-        android:id="@+id/attachments"
-        android:layout_width="150sp"
+<!--    <EditText-->
+<!--        android:id="@+id/attachments"-->
+<!--        android:layout_width="150sp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toStartOf="@id/guideline"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/attachments_text" />-->
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/attachments_text" />
+        android:text=""
+        android:id="@+id/attachments"
+        app:layout_constraintTop_toBottomOf="@+id/attachments_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20sp"
+        android:layout_marginStart="25sp"
+        android:layout_marginEnd="25sp"
+        android:paddingEnd="20sp"
+        android:paddingTop="15sp"/>
+
+    <Button
+        android:id="@+id/add_attachment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add File"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="11sp"
+        app:layout_constraintTop_toTopOf="@+id/attachments_text"
+        android:layout_marginEnd="50dp"
+        />
 
     <Button
         android:id="@+id/add_button"
