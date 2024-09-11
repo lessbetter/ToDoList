@@ -61,6 +61,35 @@
         app:layout_constraintTop_toTopOf="@+id/task_category_text"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Due time: "
+        android:id="@+id/task_duetime_text"
+        app:layout_constraintTop_toBottomOf="@+id/task_category_text"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="30sp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Testowy czas ukonczenia"
+        android:id="@+id/task_duetime"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/task_duetime_text"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:id="@+id/status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_duetime_text"
+        android:layout_marginTop="30sp"
+        />
+
     <Button
         android:id="@+id/delete_btn"
         android:layout_width="wrap_content"

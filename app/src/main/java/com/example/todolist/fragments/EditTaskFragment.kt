@@ -48,6 +48,7 @@ class EditTaskFragment: Fragment() {
         val editButton: Button = binding.editButton
         val notifSwitch: Switch = binding.notif
         var dueTime: LocalTime? = null
+        var selectedDate: String = ""
 
         val titleEdit: EditText = binding.taskTitle
         val descriptionEdit: EditText = binding.taskDescription
@@ -71,7 +72,8 @@ class EditTaskFragment: Fragment() {
                 { view, year, monthOfYear, dayOfMonth ->
                     val dat = (dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year)
                     //dateEditText.setText(dat)
-                    dateEditText.setText(String.format("%02d-%02d-%04d",dayOfMonth,monthOfYear,year))
+                    dateEditText.setText(String.format("%02d-%02d-%04d",dayOfMonth,monthOfYear+1,year))
+                    selectedDate = String.format("%04d-%02d-%02d",year,monthOfYear+1,dayOfMonth)
                 },year,month,day
             )
             datePickerDialog.show()

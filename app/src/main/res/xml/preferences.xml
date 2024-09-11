@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        android:key="hideCompleted"
+        android:title="Hide finished tasks"/>
+    <ListPreference
+        android:key="time"
+        android:title="Notifications timer"
+        android:summary="Choose the notifications timer"
+        android:entries="@array/timer"
+        android:entryValues="@array/values"
+        />
+    <ListPreference
+        android:key="category"
+        android:title="Category"
+        android:summary="Choose a category of tasks to show"
+        />
+
+</androidx.preference.PreferenceScreen>

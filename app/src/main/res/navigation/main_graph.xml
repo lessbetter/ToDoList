@@ -14,6 +14,15 @@
         <action
             android:id="@+id/action_mainFragment_to_addTaskFragment"
             app:destination="@id/addTaskFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@+id/settingsFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.todolist.settings.MySettingsFragment"
+        android:label="MySettingsFragment">
+
     </fragment>
     <fragment
         android:id="@+id/taskFragment"

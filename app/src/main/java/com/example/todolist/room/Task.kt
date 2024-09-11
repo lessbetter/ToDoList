@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 class Task (
                 var title: String,
                 var description: String,
-//                var startTime: String,
-//                var finishTime: String,
-//                var status: Boolean,            //is it finished or not
+                var createTime: String,
+                var dueTime: String,
+                var dueTimeForShow: String,
+                var status: Boolean,            //true: completed       false: not completed yet
                 var notifications: Boolean,
                 var category: String,
 //                var attachments: String,

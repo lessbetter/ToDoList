@@ -56,10 +56,6 @@ class TodoRVAdapter(private val listOfTasks: MutableList<Task>)
     inner class ViewHolder(binding: TaskRowBinding): RecyclerView.ViewHolder(binding.root) {
         val title = binding.taskTitle
         val notif = binding.notif
-//        init {
-//            binding.cardView.setOnClickListener{
-//                listener.onItemClick(adapterPosition)
-//            }
-//        }
+
     }
 }
