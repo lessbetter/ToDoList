@@ -55,4 +55,7 @@ interface TodoDao {
 
     @Query ("SELECT DISTINCT category FROM task_table ORDER BY category ASC")
     fun getCategories(): LiveData<MutableList<String>>
+
+    @Query ("SELECT user_id FROM task_table ORDER BY user_id DESC LIMIT 1")
+    fun getLastID(): LiveData<Int>
 }

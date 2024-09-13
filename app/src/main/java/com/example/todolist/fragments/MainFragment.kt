@@ -71,6 +71,7 @@ class MainFragment: Fragment(){
 
 
 
+
         listOfTasks = viewModel.tasksUsingFlow
         categoriesList = viewModel.getCategories()
 
@@ -171,6 +172,7 @@ class MainFragment: Fragment(){
         })
 
         fab.setOnClickListener {
+
             findNavController().navigate(R.id.action_mainFragment_to_addTaskFragment)
         }
 

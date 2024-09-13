@@ -1,20 +1,30 @@
 package com.example.todolist.viewmodel
 
+import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkBuilder
+import com.example.todolist.notifications.Notification
+import com.example.todolist.notifications.messageExtra
+import com.example.todolist.notifications.titleExtra
 import com.example.todolist.room.Task
 import com.example.todolist.room.TodoRepository
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
+import java.security.AccessController.getContext
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class TodoViewModel (application: Application): AndroidViewModel(application) {
@@ -29,6 +39,9 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     private val _testList = MutableLiveData<MutableList<Task>>()
     val testList: LiveData<MutableList<Task>> get() = _testList
+
+    private val _lastId = MutableLiveData<Int>()
+    val lastId: LiveData<Int> get() = _lastId
 
 
 
@@ -67,6 +80,10 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     fun setCurTask(task: Task){
         _curTask.value = task
+    }
+
+    fun setLastID(id: Int){
+        _lastId.value = id
     }
 
     fun setCategoryList(categories: MutableList<String>){
@@ -123,6 +140,57 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
         val dateTime = LocalDateTime.parse(date,formatter)
         val now = LocalDateTime.now()
         return dateTime.isBefore(now)
+    }
+
+    fun getLastID(): LiveData<Int> = runBlocking{
+        todoRepository.getLastID().await()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun scheduleNotification(title: String, date: String, time: Int, id: Int, cancel: Boolean) {
+
+        val intent = Intent(getApplication(), Notification::class.java)
+        intent.putExtra(titleExtra, title)
+        intent.putExtra(messageExtra, "There are "+time.toString()+" minutes left to complete this task")
+
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+        var dateTime = LocalDateTime.parse(date,formatter)
+
+        dateTime= dateTime.minusMinutes(time.toLong())
+
+        val tempTime = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            getApplication(),
+            id,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+//        val alarmManager = getApplication().let {
+//            ContextCompat.getSystemService(
+//                it,
+//                AlarmManager::class.java
+//            )
+//        } as AlarmManager
+
+        val alarmManager = getSystemService(getApplication(),AlarmManager::class.java) as AlarmManager
+
+        if(!cancel){
+            if(alarmManager.canScheduleExactAlarms()){
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    tempTime,
+                    pendingIntent
+                )
+
+            }
+        }
+
+
+        if(cancel){
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+        }
     }
 
 }

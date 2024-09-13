@@ -65,11 +65,24 @@ class AddTaskFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val getResult = registerForActivityResult(ActivityResultContracts.GetContent()){
-            if(it?.path?.isNotEmpty() == true){
-                viewModel.setFilePath(it.path.toString())
+        val getResult = registerForActivityResult(ActivityResultContracts.OpenDocument()){
+            if(it?.toString()?.isNotEmpty() == true){
+                viewModel.setFilePath(it.toString())
+                requireContext().contentResolver?.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
+
+        val temp = viewModel.getLastID()
+
+        temp.observe(viewLifecycleOwner){
+            if(it != null){
+                viewModel.setLastID(it)
+            }else{
+                viewModel.setLastID(0)
+            }
+        }
+        var thisLastId: Int
+
 
 
         val dateEditText: EditText = binding.date
@@ -81,6 +94,7 @@ class AddTaskFragment: Fragment() {
         val attachmentsText: TextView = binding.attachments
         var filesString: String = ""
         //val attachmentsEditText: EditText = binding.attachments
+        //var lastID = viewModel.getLastID()
 
         dateEditText.setOnClickListener {
             val c = Calendar.getInstance()
@@ -129,7 +143,11 @@ class AddTaskFragment: Fragment() {
 
         attachmentsButton.setOnClickListener {
             //val intent = Intent().setType("*/*")
-            getResult.launch("*/*")
+            //getResult.launch("*/*")'
+            //val intent = Intent().setType("*/*")
+            //getResult.
+            val temp: Array<String> = arrayOf(Intent.CATEGORY_OPENABLE,"*/*")
+            getResult.launch(temp)
             if(viewModel.filePath.value!= null){
                 Log.d(TAG,viewModel.filePath.value.toString())
             }
@@ -138,53 +156,72 @@ class AddTaskFragment: Fragment() {
         }
 
         addButton.setOnClickListener {
-            val title: String = binding.taskTitle.text.toString()
-            val description: String = binding.taskDescription.text.toString()
-            val category: String = binding.taskCategory.text.toString()
-            val taskDate: String = binding.date.text.toString()
-            val taskTime: String = binding.time.text.toString()
-            val taskDue: String = "$taskDate $taskTime"
-            val notifications: Boolean = binding.notif.isChecked()
-            val attachments: String = binding.attachments.text.toString()
-            val status = viewModel.isCompleted(taskDue)
+            if(binding.date.text.isNotEmpty() && binding.time.text.isNotEmpty()){
+                val title: String = binding.taskTitle.text.toString()
+                val description: String = binding.taskDescription.text.toString()
+                val category: String = binding.taskCategory.text.toString()
+                val taskDate: String = binding.date.text.toString()
+                val taskTime: String = binding.time.text.toString()
+                val taskDue: String = "$selectedDate $taskTime"
+                val taskDueForShow: String = "$taskDate $taskTime"
+                val notifications: Boolean = binding.notif.isChecked()
+                val attachments: String = binding.attachments.text.toString()
+                val status = viewModel.isCompleted(taskDueForShow)
 
-            //val formatter = DateTimeFormatter.ofPattern("HH:mm")
-            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
-            val current = LocalDateTime.now().format(formatter)
-            //Log.d(TAG, notifications.toString())
-            Log.d(TAG, title+description+current+taskDue+notifications+category+attachments)
-            //val task = Task(title,description,current,selectedDate,taskDue,notifications,category)
+                //val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+                val current = LocalDateTime.now().format(formatter)
+                //Log.d(TAG, notifications.toString())
+                Log.d(TAG, title+description+current+taskDueForShow+notifications+category+attachments)
+                //val task = Task(title,description,current,selectedDate,taskDue,notifications,category)
+//                if(viewModel.lastId.value!=null){
+//                    Log.d(TAG,viewModel.lastId.value.toString())
+//                }
 
 
 
-            if(title.isNotEmpty() && taskDate.isNotEmpty() && taskTime.isNotEmpty() && category.isNotEmpty() && selectedDate.isNotEmpty() && !status){
-                val task = Task(title,description,current,selectedDate,taskDue,status,notifications,category,filesString)
-                viewModel.insertTask(task)
-                binding.taskTitle.setText("")
-                binding.taskDescription.setText("")
-                binding.taskCategory.setText("")
-                binding.date.setText("")
-                binding.time.setText("")
-                filesString = ""
-                if(binding.notif.isChecked()) {
-                    binding.notif.toggle()
-                    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-                    val test = sharedPreferences.getString("time","")
-                    if (test != null) {
-                        Log.d(TAG, test)
-                        scheduleNotification(title,taskDue,test.toInt())
-                    }else
-                        scheduleNotification(title,taskDue,0)
+                if(title.isNotEmpty() && taskDate.isNotEmpty() && taskTime.isNotEmpty() && category.isNotEmpty() && selectedDate.isNotEmpty() && !status){
+                    val task = Task(title,description,current,taskDue,taskDueForShow,status,notifications,category,filesString)
+                    viewModel.insertTask(task)
 
+                    if(viewModel.lastId.value!=null){
+                        thisLastId = viewModel.lastId.value!!
+                    }else{
+                        thisLastId = 0
+                    }
+
+                    binding.taskTitle.setText("")
+                    binding.taskDescription.setText("")
+                    binding.taskCategory.setText("")
+                    binding.date.setText("")
+                    binding.time.setText("")
+                    filesString = ""
+                    if(binding.notif.isChecked()) {
+                        binding.notif.toggle()
+                        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                        val test = sharedPreferences.getString("time","")
+                        if (test != null) {
+                            Log.d(TAG, test)
+                            viewModel.scheduleNotification(title,taskDueForShow,test.toInt(),thisLastId+1,false)
+                            //scheduleNotification(title,taskDueForShow,test.toInt(),thisLastId+1)
+                        }else
+                            viewModel.scheduleNotification(title,taskDueForShow,0,thisLastId+1,false)
+                            //scheduleNotification(title,taskDueForShow,0,thisLastId+1)
+
+                    }
+                    binding.attachments.setText("")
+                    Toast.makeText(activity,"Task added to the list",Toast.LENGTH_SHORT).show()
+                    //lastID = viewModel.getLastID()
                 }
-                binding.attachments.setText("")
-                Toast.makeText(activity,"Task added to the list",Toast.LENGTH_SHORT).show()
-            }
-            else if(!status){
+                else if(!status){
+                    Toast.makeText(activity,"Not enough parameters has been set",Toast.LENGTH_SHORT).show()
+                }else {
+                    Toast.makeText(activity,"Select a date from the future",Toast.LENGTH_SHORT).show()
+                }
+            }else{
                 Toast.makeText(activity,"Not enough parameters has been set",Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(activity,"Select a date from the future",Toast.LENGTH_SHORT).show()
             }
+
         }
 
 
@@ -192,10 +229,12 @@ class AddTaskFragment: Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun scheduleNotification(title: String, date: String, time: Int) {
+    fun scheduleNotification(title: String, date: String, time: Int, id: Int) {
         val intent = Intent(context, Notification::class.java)
+        intent.putExtra(notificationID.toString(),id)
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, "There are "+time.toString()+" minutes left to complete this task")
+
 
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
         var dateTime = LocalDateTime.parse(date,formatter)
@@ -206,7 +245,7 @@ class AddTaskFragment: Fragment() {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            notificationID,
+            id,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -218,6 +257,7 @@ class AddTaskFragment: Fragment() {
                 tempTime,
                 pendingIntent
             )
+
         }
     }
 

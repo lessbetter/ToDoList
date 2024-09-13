@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.example.todolist.databinding.FragmentEditTaskBinding
 import com.example.todolist.room.Task
 import com.example.todolist.viewmodel.TodoViewModel
@@ -39,7 +40,7 @@ class EditTaskFragment: Fragment() {
     }
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,12 +61,18 @@ class EditTaskFragment: Fragment() {
             notifSwitch.toggle()
         }
 
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+        val dateTime = LocalDateTime.parse(viewModel.curTask.value!!.dueTimeForShow,formatter)
+
+        dateEditText.setText(String.format("%02d-%02d-%04d",dateTime.dayOfMonth,dateTime.monthValue,dateTime.year))
+        timeEditText.setText(String.format("%02d:%02d",dateTime.hour,dateTime.minute))
+
 
         dateEditText.setOnClickListener {
             val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
+            val year = dateTime.year
+            val month = dateTime.monthValue
+            val day = dateTime.dayOfMonth
 
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
@@ -94,9 +101,23 @@ class EditTaskFragment: Fragment() {
             viewModel.curTask.value!!.title = binding.taskTitle.text.toString()
             viewModel.curTask.value!!.description = binding.taskDescription.text.toString()
             viewModel.curTask.value!!.category = binding.taskCategory.text.toString()
-            //viewModel.curTask.value!!.taskDate = binding.date.text.toString()
-            //viewModel.curTask.value!!.taskTime = binding.time.text.toString()
-            viewModel.curTask.value!!.notifications = binding.notif.isChecked()
+            val taskDate = binding.date.text.toString()
+            val taskTime = binding.time.text.toString()
+            viewModel.curTask.value!!.dueTime = "$selectedDate $taskTime"
+            viewModel.curTask.value!!.dueTimeForShow = "$taskDate $taskTime"
+
+            if(binding.notif.isChecked){
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                val test = sharedPreferences.getString("time","")
+                if (test != null) {
+                    Log.d(TAG, test)
+                    viewModel.scheduleNotification(viewModel.curTask.value!!.title,viewModel.curTask.value!!.dueTimeForShow,test.toInt(),viewModel.curTask.value!!.user_id+1,false)
+                }else
+                    viewModel.scheduleNotification(viewModel.curTask.value!!.title,viewModel.curTask.value!!.dueTimeForShow,0,viewModel.curTask.value!!.user_id+1,false)
+
+            }
+
+            //viewModel.curTask.value!!.notifications = binding.notif.isChecked()
             //viewModel.curTask.value!!.attachments = binding.attachments.text.toString()
 
             val formatter = DateTimeFormatter.ofPattern("HH:mm")

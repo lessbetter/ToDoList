@@ -21,6 +21,6 @@ class Notification: BroadcastReceiver() {
                 .build()
 
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.notify(notificationID,notification)
+            manager.notify(intent.getIntExtra(notificationID.toString(),1),notification)
     }
 }

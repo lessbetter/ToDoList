@@ -91,4 +91,9 @@ class TodoRepository(application: Application) {
         CoroutineScope(Dispatchers.IO).async {
             todoDao.getCategories()
         }
+
+    fun getLastID(): Deferred<LiveData<Int>> =
+        CoroutineScope(Dispatchers.IO).async{
+            todoDao.getLastID()
+        }
 }
