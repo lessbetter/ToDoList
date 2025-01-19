@@ -50,6 +50,11 @@ class TodoRepository(application: Application) {
             todoDao.deleteAllRows()
         }
 
+    fun getTaskFromId(id: Int): Deferred<LiveData<Task>> =
+        CoroutineScope(Dispatchers.IO).async{
+            todoDao.getTaskFromId(id)
+        }
+
     fun getAllTasksSortByAscFinishTime(): Deferred<LiveData<MutableList<Task>>> =
         CoroutineScope(Dispatchers.IO).async {
             todoDao.getAllTasksSortByAscFinishTime()

@@ -29,6 +29,9 @@ interface TodoDao {
     @Query ("SELECT * from task_table")
     fun getTasksFlow(): Flow<MutableList<Task>>
 
+    @Query ("SELECT * from task_table WHERE user_id=:id")
+    fun getTaskFromId(id: Int): LiveData<Task>
+
     @Query ("SELECT * FROM task_table ORDER BY dueTime ASC")
     fun getAllTasksSortByAscFinishTime(): LiveData<MutableList<Task>>
 

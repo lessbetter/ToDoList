@@ -17,8 +17,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.CursorAdapter
 import android.widget.EditText
+import android.widget.SimpleAdapter
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -28,6 +36,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
+import com.example.todolist.adapters.MySpinnerAdapter
 import com.example.todolist.databinding.FragmentAddTaskBinding
 import com.example.todolist.notifications.Notification
 import com.example.todolist.notifications.messageExtra
@@ -83,6 +92,12 @@ class AddTaskFragment: Fragment() {
         }
         var thisLastId: Int
 
+        var categoryList: Array<CharSequence> = arrayOf()
+
+        viewModel.categoryList.value?.forEach {
+            categoryList += it
+        }
+
 
 
         val dateEditText: EditText = binding.date
@@ -95,6 +110,28 @@ class AddTaskFragment: Fragment() {
         var filesString: String = ""
         //val attachmentsEditText: EditText = binding.attachments
         //var lastID = viewModel.getLastID()
+
+        val spinner: Spinner = binding.spinner3
+
+//        ArrayAdapter.createFromResource(requireContext(),categoryList,android.R.layout.simple_spinner_item).also{ adapter ->
+//
+//        }
+        ArrayAdapter(requireContext(),android.R.layout.simple_dropdown_item_1line,categoryList).also{ adapter ->
+            spinner.adapter = adapter
+        }
+
+        //MySpinnerAdapter.also { spinner.onItemSelectedListener = it }
+
+//        AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+//                // An item is selected. You can retrieve the selected item using
+//                // parent.getItemAtPosition(pos).
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {
+//                // Another interface callback.
+//            }
+//        }
 
         dateEditText.setOnClickListener {
             val c = Calendar.getInstance()
@@ -199,7 +236,7 @@ class AddTaskFragment: Fragment() {
                     if(binding.notif.isChecked()) {
                         binding.notif.toggle()
                         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-                        val test = sharedPreferences.getString("time","")
+                        val test = sharedPreferences.getString("time","5")
                         if (test != null) {
                             Log.d(TAG, test)
                             viewModel.scheduleNotification(title,taskDueForShow,test.toInt(),thisLastId+1,false)

@@ -17,6 +17,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkBuilder
 import com.example.todolist.notifications.Notification
 import com.example.todolist.notifications.messageExtra
+import com.example.todolist.notifications.openFragment
+import com.example.todolist.notifications.task_id
 import com.example.todolist.notifications.titleExtra
 import com.example.todolist.room.Task
 import com.example.todolist.room.TodoRepository
@@ -42,6 +44,9 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
 
     private val _lastId = MutableLiveData<Int>()
     val lastId: LiveData<Int> get() = _lastId
+
+    private val _taskFromId = MutableLiveData<Task>()
+    val taskFromId: LiveData<Task> get() = _taskFromId
 
 
 
@@ -146,12 +151,18 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
         todoRepository.getLastID().await()
     }
 
+    fun getTaskFromId(id: Int): LiveData<Task> = runBlocking {
+        todoRepository.getTaskFromId(id).await()
+    }
+
     @RequiresApi(Build.VERSION_CODES.S)
     fun scheduleNotification(title: String, date: String, time: Int, id: Int, cancel: Boolean) {
 
         val intent = Intent(getApplication(), Notification::class.java)
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, "There are "+time.toString()+" minutes left to complete this task")
+        intent.putExtra(openFragment,"TaskFragment")
+        intent.putExtra(task_id,id.toString())
 
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
         var dateTime = LocalDateTime.parse(date,formatter)
