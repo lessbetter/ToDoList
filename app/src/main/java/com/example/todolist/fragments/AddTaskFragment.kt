@@ -18,7 +18,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.AdapterView.INVISIBLE
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.AdapterView.VISIBLE
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.Button
@@ -35,7 +37,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.example.todolist.R
 import com.example.todolist.adapters.MySpinnerAdapter
 import com.example.todolist.databinding.FragmentAddTaskBinding
 import com.example.todolist.notifications.Notification
@@ -44,6 +48,7 @@ import com.example.todolist.notifications.notificationID
 import com.example.todolist.notifications.titleExtra
 import com.example.todolist.room.Task
 import com.example.todolist.viewmodel.TodoViewModel
+import java.io.File
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
 import java.net.URI
@@ -57,6 +62,7 @@ class AddTaskFragment: Fragment() {
     private val viewModel: TodoViewModel by activityViewModels()
     private lateinit var binding: FragmentAddTaskBinding
     private lateinit var filePath: String
+    private lateinit var adapter: MySpinnerAdapter
     //private lateinit var getResult:
 
     override fun onCreateView(
@@ -97,7 +103,9 @@ class AddTaskFragment: Fragment() {
         viewModel.categoryList.value?.forEach {
             categoryList += it
         }
+        categoryList+="Set new category"
 
+        var filesList: MutableList<String> = mutableListOf()
 
 
         val dateEditText: EditText = binding.date
@@ -108,6 +116,7 @@ class AddTaskFragment: Fragment() {
         val attachmentsButton: Button = binding.addAttachment
         val attachmentsText: TextView = binding.attachments
         var filesString: String = ""
+        var catText: String = ""
         //val attachmentsEditText: EditText = binding.attachments
         //var lastID = viewModel.getLastID()
 
@@ -116,11 +125,46 @@ class AddTaskFragment: Fragment() {
 //        ArrayAdapter.createFromResource(requireContext(),categoryList,android.R.layout.simple_spinner_item).also{ adapter ->
 //
 //        }
+        //adapter = MySpinnerAdapter()
         ArrayAdapter(requireContext(),android.R.layout.simple_dropdown_item_1line,categoryList).also{ adapter ->
             spinner.adapter = adapter
         }
 
-        //MySpinnerAdapter.also { spinner.onItemSelectedListener = it }
+        //spinner.onItemSelectedListener = MySpinnerAdapter()
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+//                TODO("Not yet implemented")
+                if (parent != null) {
+                    catText = parent.getItemAtPosition(position).toString()
+                    if(catText == "Set new category"){
+                        binding.taskCategory.visibility = VISIBLE
+                        binding.taskCategory.setText("")
+                    }
+                    else{
+                        binding.taskCategory.visibility = INVISIBLE
+                        binding.taskCategory.setText(parent.getItemAtPosition(position).toString())
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+            }
+
+        }
+
+        //binding.taskCategory.text = spinner.onItemSelectedListener.toString()
+
+//        spinner.onItemSelectedListener.also { onItemSelectedListener ->
+//            override fun onItemSelected(){
+//
+//            }
+//        }
 
 //        AdapterView.OnItemSelectedListener {
 //            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
@@ -160,7 +204,7 @@ class AddTaskFragment: Fragment() {
                 }else{
                     filesString += it
                 }
-
+                filesList.add(it)
                 attachmentsText.text = filesString
                 //attachmentsEditText.setText(it)
             }
@@ -193,6 +237,10 @@ class AddTaskFragment: Fragment() {
         }
 
         addButton.setOnClickListener {
+            if(binding.taskCategory.text.toString() == "Set new category"){
+                Toast.makeText(activity,"This category name is not permitted",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if(binding.date.text.isNotEmpty() && binding.time.text.isNotEmpty()){
                 val title: String = binding.taskTitle.text.toString()
                 val description: String = binding.taskDescription.text.toString()
@@ -246,8 +294,15 @@ class AddTaskFragment: Fragment() {
                             //scheduleNotification(title,taskDueForShow,0,thisLastId+1)
 
                     }
-                    binding.attachments.setText("")
+                    if(filesList.isNotEmpty()){
+
+                        filesList.forEach({ file ->
+                            //var tempFile = File(context.filesDir,)
+                        })
+                    }
+                    binding.attachments.text = ""
                     Toast.makeText(activity,"Task added to the list",Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_addTaskFragment_to_mainFragment)
                     //lastID = viewModel.getLastID()
                 }
                 else if(!status){

@@ -1,14 +1,19 @@
 package com.example.todolist.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -203,5 +208,28 @@ class TodoViewModel (application: Application): AndroidViewModel(application) {
             pendingIntent.cancel()
         }
     }
+
+//    fun getNamesFromUri(attachmentsList: List<String>): List<String> {
+//        var lista: MutableList<String> = mutableListOf("")
+//        attachmentsList.forEach {
+//            lista.add(getNameFromURI(it.toUri()))
+//        }
+//        return lista as List<String>
+//    }
+//
+//    fun convertToList(attachments: String): List<String> {
+//        return attachments.split(";")
+//    }
+//    @SuppressLint("Range", "Recycle")
+//    fun getNameFromURI(uri: Uri): String {
+//        val c: Cursor? = requireContext().contentResolver.query(uri, null, null, null, null)
+//        if (c != null) {
+//            c.moveToFirst()
+//            return c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+//        }
+//        else
+//            return ""
+//
+//    }
 
 }
