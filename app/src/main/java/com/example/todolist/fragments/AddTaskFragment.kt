@@ -1,5 +1,6 @@
 package com.example.todolist.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.DatePickerDialog
@@ -12,7 +13,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
+import android.provider.OpenableColumns
 import android.provider.Telephony.Sms.Intents
+import android.text.style.TabStopSpan.Standard
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,12 +38,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.example.todolist.R
 import com.example.todolist.adapters.MySpinnerAdapter
+import com.example.todolist.data.AttachmentContent
 import com.example.todolist.databinding.FragmentAddTaskBinding
 import com.example.todolist.notifications.Notification
 import com.example.todolist.notifications.messageExtra
@@ -52,11 +57,15 @@ import java.io.File
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import kotlin.io.path.toPath
 
 class AddTaskFragment: Fragment() {
     private val viewModel: TodoViewModel by activityViewModels()
@@ -76,17 +85,25 @@ class AddTaskFragment: Fragment() {
     }
 
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var attachmentFiles: MutableList<AttachmentContent> = mutableListOf()
 
         val getResult = registerForActivityResult(ActivityResultContracts.OpenDocument()){
             if(it?.toString()?.isNotEmpty() == true){
                 viewModel.setFilePath(it.toString())
+                requireContext().contentResolver.query(it,null,null,null,null)?.use { cursor ->
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    cursor.moveToFirst()
+
+                    attachmentFiles.add(AttachmentContent(it, Path.of(it.path),cursor.getString(nameIndex)))
+                }
                 requireContext().contentResolver?.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
-
         val temp = viewModel.getLastID()
 
         temp.observe(viewLifecycleOwner){
@@ -293,6 +310,17 @@ class AddTaskFragment: Fragment() {
                             viewModel.scheduleNotification(title,taskDueForShow,0,thisLastId+1,false)
                             //scheduleNotification(title,taskDueForShow,0,thisLastId+1)
 
+                    }
+                    if(attachmentFiles.isNotEmpty()){
+                        attachmentFiles.forEach({ file ->
+                            var tempFile = File(requireContext().filesDir.path)
+                            //var tempFile2 = File(URI.create())
+                            var tempURI = URI(file.fileUri.toString())
+                            var ttemp = file.fileUri.toFile()
+
+                            Files.copy(ttemp.toPath(),requireContext().filesDir.toPath(),StandardCopyOption.REPLACE_EXISTING)
+                            //tempFile2.copy
+                        })
                     }
                     if(filesList.isNotEmpty()){
 

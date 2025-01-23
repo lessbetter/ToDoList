@@ -153,6 +153,7 @@ class TaskFragment: Fragment() {
     }
     @SuppressLint("Range")
     fun getNameFromURI(uri: Uri): String {
+
         val c: Cursor? = requireContext().contentResolver.query(uri, null, null, null, null)
         if (c != null) {
             c.moveToFirst()
